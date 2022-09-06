@@ -13,7 +13,7 @@ const algorithm = 'aes-256-ctr';
 
 const encrypt = (content: string) => {
   if (!secretKey) {
-    return null;
+    throw new Error('Environment variable not provided for encryption');
   }
 
   const iv = crypto.randomBytes(16);
@@ -28,7 +28,7 @@ const encrypt = (content: string) => {
 
 const decrypt = (hash: HashObject) => {
   if (!secretKey) {
-    return null;
+    throw new Error('Environment variable not provided for decryption');
   }
 
   const decipher = crypto.createDecipheriv(
