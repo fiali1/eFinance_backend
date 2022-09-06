@@ -15,9 +15,9 @@ import {
 
 const usersRoutes = Router();
 
-usersRoutes.get('/users/:username', auth, getUserData);
 usersRoutes.post('/users/verify', checkUsername);
 usersRoutes.post('/users', validate(createUserSchema), addUser);
+usersRoutes.get('/users/:username', auth, getUserData);
 usersRoutes.put(
   '/users/:username',
   auth,

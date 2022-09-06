@@ -16,8 +16,8 @@ import {
 const entriesRoutes = Router();
 
 entriesRoutes.get('/entries', auth, getAllEntriesFromUser);
-entriesRoutes.get('/entries/:id', auth, getEntryFromUser);
 entriesRoutes.post('/entries', auth, validate(createEntrySchema), createEntry);
+entriesRoutes.get('/entries/:id', auth, getEntryFromUser);
 entriesRoutes.put(
   '/entries/:id',
   auth,
