@@ -4,8 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "yarn build && node ./dist/index.js",
-    "build": "rimraf ./dist && tsc",
+    "start": "npm run build && node ./dist/index.js",
+    "build": "rimraf ./dist && npm run tsc",
+    "tsc": "tsc",
     "start:dev": "nodemon"
   },
   "devDependencies": {
