@@ -1,34 +1,36 @@
 # e-Finance
-A sample Node.js/Express CRUD application with Firestore as database.
+Aplicação-exemplo Node.js/Express CRUD com Firestore como database.
 
-Manage your expenses and income with entries listing and balance output.
+Gerencie gastos e renda com uma listagem de registros e apresentação do balanço.
 
 ### Libs: 
 * **Server:** Express 
 * **Encryption:** Bcrypt
-* **Validation:** Yup
-* **Basic auth:** Jsonwebtoken
+* **Validação:** Yup
+* **Autenticação básica:** Jsonwebtoken
 ### Routes: 
 * **/login**
-  * POST | _Generates access token_
+  * POST | _Gera access token_
 * **/users**
-  * POST | _Creates a new user_
+  * POST | _Cria um novo usuário_
   * **/:username**
-    * GET | _Returns \<username> data_
-    * PUT | _Updates \<username> data_
-    * DELETE | _Deletes \<username> data, also deleting its entries_
+    * GET | _Retorna os dados de <username>_
+    * PUT | _Atualiza os dados de <username>_
+    * DELETE | _Deleta o usuário <username> e seus registros_
   * **/verify**
-    * POST | _Verifies if specified username is available for register_
+    * POST | _Verifica se um username está disponível para cadastro_
 * **/entries**
-  * POST | _Creates a new entry for a user_
-  * GET | _Returns all entries from a user_
+  * POST | _Cria um novo registro para um usuário_
+  * GET | _Retorna todos os registros de um usuário_
   * **/:id**
-    * GET | _Returns an entry from a user by its id_
-    * PUT | _Updates an entry from a user by its id_
-    * DELETE | _Deletes an entry from a user_
+    * GET | _Retorna um registro de um usuário pelo seu id_
+    * PUT | _Atualiza um registro de um usuário pelo seu id_
+    * DELETE | _Delete um registro de um usuário pelo seu id_
 
 <br>
 <hr>
 <br>
 
-### Frontend repo: https://github.com/fiali1/eFinance_frontend
+### **Frontend repo:** https://github.com/fiali1/eFinance_frontend
+
+### **Firebase Hosting com backend Heroku:** https://e-finance-6a22e.web.app/

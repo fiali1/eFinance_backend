@@ -10,6 +10,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from '../services/firestore';
+import { decrypt, encrypt } from '../utils/crypto';
 
 interface CustomReq extends Request {
   username: string;
@@ -27,11 +28,25 @@ export async function getEntryFromUser(req: Request, res: Response) {
       return res.status(404).send('O registro especificado não foi encontrado');
     }
 
+    // Decrypts data from db
+    const { title, description, tag, type, value, createdAt, updatedAt } =
+      entryData;
+
+    const decryptedTitle = decrypt(title);
+    const decryptedDescription = decrypt(description);
+    const decryptedTag = decrypt(tag);
+    const decryptedType = decrypt(type);
+    const decryptedValue = decrypt(value);
+
     const formattedEntryData = {
-      ...entryData,
       id: entrySnapshot.id,
-      createdAt: entryData.createdAt.toDate(),
-      updatedAt: entryData.updatedAt.toDate(),
+      title: decryptedTitle,
+      description: decryptedDescription,
+      tag: decryptedTag,
+      type: decryptedType,
+      value: decryptedValue,
+      createdAt: createdAt.toDate(),
+      updatedAt: updatedAt.toDate(),
     };
 
     return res.status(200).send(formattedEntryData);
@@ -49,11 +64,24 @@ export async function getAllEntriesFromUser(req: Request, res: Response) {
     const entriesRef = collection(db, `/users/${username}/entries`);
     const entriesSnapshot = await getDocs(entriesRef);
     const entriesList = entriesSnapshot.docs.map((item) => {
+      // Decrypts data from db
+      const { title, description, tag, type, value, createdAt, updatedAt } =
+        item.data();
+      const decryptedTitle = decrypt(title);
+      const decryptedDescription = decrypt(description);
+      const decryptedTag = decrypt(tag);
+      const decryptedType = decrypt(type);
+      const decryptedValue = decrypt(value);
+
       return {
-        ...item.data(),
         id: item.id,
-        createdAt: item.data().createdAt.toDate(),
-        updatedAt: item.data().updatedAt.toDate(),
+        title: decryptedTitle,
+        description: decryptedDescription,
+        tag: decryptedTag,
+        type: decryptedType,
+        value: decryptedValue,
+        createdAt: createdAt.toDate(),
+        updatedAt: updatedAt.toDate(),
       };
     });
 
@@ -69,14 +97,21 @@ export async function createEntry(req: Request, res: Response) {
   const { username } = req as CustomReq;
   const { title, description, tag, type, value } = req.body;
 
+  // Encrypts data for db
+  const encryptedTitle = encrypt(title);
+  const encryptedDescription = encrypt(description);
+  const encryptedTag = encrypt(tag);
+  const encryptedType = encrypt(type);
+  const encryptedValue = encrypt(value.toString());
+
   try {
     const entryRef = collection(db, `users/${username}/entries`);
     await addDoc(entryRef, {
-      title,
-      description,
-      tag,
-      type,
-      value,
+      title: encryptedTitle,
+      description: encryptedDescription,
+      tag: encryptedTag,
+      type: encryptedType,
+      value: encryptedValue,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
     });
@@ -100,12 +135,18 @@ export async function updateEntry(req: Request, res: Response) {
       return res.status(404).send('O registro especificado não foi encontrado');
     }
 
+    const encryptedTitle = encrypt(title);
+    const encryptedDescription = encrypt(description);
+    const encryptedTag = encrypt(tag);
+    const encryptedType = encrypt(type);
+    const encryptedValue = encrypt(value.toString());
+
     const updatedData = {
-      ...(title && { title }),
-      ...(description && { description }),
-      ...(tag && { tag }),
-      ...(type && { type }),
-      ...(value && { value }),
+      ...(title && { title: encryptedTitle }),
+      ...(description && { description: encryptedDescription }),
+      ...(tag && { tag: encryptedTag }),
+      ...(type && { type: encryptedType }),
+      ...(value && { value: encryptedValue }),
       updatedAt: serverTimestamp(),
     };
 
